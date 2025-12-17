@@ -19,8 +19,7 @@ export class GUI {
         });
     }
 
-    public render(globalData: GlobalData): void
-    {
+    public render(globalData: GlobalData): void {
         if (ImGui.CollapsingHeader("Connection Info", ImGui.TreeNodeFlags.DefaultOpen)) {
             ImGui.Text("SESSION ID");
             ImGui.SameLine();
@@ -36,8 +35,7 @@ export class GUI {
 
             ImGui.Text("Available Animations");
             ImGui.SameLine();
-            if (ImGui.Combo("##Animation", globalData.SELECTED_ANIMATION, globalData.ANIMATIONS.join("\0") + "\0"))
-            {
+            if (ImGui.Combo("##Animation", globalData.SELECTED_ANIMATION, globalData.ANIMATIONS.join("\0") + "\0")) {
                 console.log("Selected animation:", globalData.ANIMATIONS[globalData.SELECTED_ANIMATION[0]]);
             }
 
@@ -72,7 +70,11 @@ export class GUI {
                 }
             }
 
-            ImGui.SliderFloat("Playback Speed", globalData.playbackSpeed, 0.0, 10.0, "%.3f");
+            if (ImGui.SliderFloat("Playback Speed", globalData.playbackSpeed, 0.0, 10.0, "%.3f")) {
+                sendPostRequest(`${globalData.API_URL[0]}/sessions/${globalData.SESSION_ID[0]}/speed`, JSON.stringify({
+                    playback_speed: globalData.playbackSpeed[0]
+                }));
+            }
         }
 
         if (ImGui.CollapsingHeader("Camera Controls", ImGui.TreeNodeFlags.DefaultOpen)) {
