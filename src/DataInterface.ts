@@ -6,4 +6,6 @@ export interface GlobalData {
     SELECTED_ANIMATION: [number];
     play: [boolean];
     connected: [boolean];
+    cameraFollow: [boolean];
+    playbackSpeed: [number];
 }

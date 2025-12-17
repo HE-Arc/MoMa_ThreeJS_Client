@@ -80,6 +80,9 @@ export class BvhSkeleton {
             // NumPy envoie en Row-Major, ThreeJS attend du Column-Major
             bone.matrixWorld.fromArray(view, offset);
             bone.matrixWorld.transpose();
+
+            // Update the position, rotation, scale from the world matrix
+            bone.matrixWorld.decompose(bone.position, bone.quaternion, bone.scale);
         }
     }
 }

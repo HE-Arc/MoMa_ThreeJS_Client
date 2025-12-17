@@ -1,4 +1,6 @@
-﻿import {ImGui, ImGuiImplWeb} from "@mori2003/jsimgui";
+﻿// noinspection D
+
+import {ImGui, ImGuiImplWeb} from "@mori2003/jsimgui";
 import {AnimationClient} from "./network.ts";
 import type {GlobalData} from "./DataInterface.ts";
 import {sendDeleteRequest, sendPostRequest} from "./tools.ts";
@@ -69,6 +71,12 @@ export class GUI {
                     sendPostRequest(`${globalData.API_URL[0]}/sessions/${globalData.SESSION_ID[0]}/pause`, {});
                 }
             }
+
+            ImGui.SliderFloat("Playback Speed", globalData.playbackSpeed, 0.0, 10.0, "%.3f");
+        }
+
+        if (ImGui.CollapsingHeader("Camera Controls", ImGui.TreeNodeFlags.DefaultOpen)) {
+            ImGui.Checkbox("Camera Follow", globalData.cameraFollow);
         }
 
         if (ImGui.CollapsingHeader("Others")) {

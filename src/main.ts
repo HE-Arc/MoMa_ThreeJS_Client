@@ -20,6 +20,8 @@ const globalData: GlobalData = {
     SELECTED_ANIMATION: [0],
     play: [true],
     connected: [true],
+    cameraFollow: [true],
+    playbackSpeed: [1.0],
 }
 
 const gui = new GUI.GUI();
@@ -53,7 +55,7 @@ async function init() {
     let session_id: string = globalData.SESSION_ID[0];
     const sessionInfo = await sendPostRequest(`${globalData.API_URL[0]}/sessions`, JSON.stringify({
         session_id: globalData.SESSION_ID[0],
-        animation_file: "07_01.bvh"
+        animation_file: "dance1_subject1.bvh"
     }))
 
     session_id = sessionInfo.session_id || session_id;
@@ -130,6 +132,7 @@ async function init() {
         stats.begin();
 
         gui.render(globalData);
+        if (bvhAnim && globalData.cameraFollow[0]) controls.target.copy(bvhAnim.bones[0].position);
         controls.update();
         renderer.render(scene, camera);
 
