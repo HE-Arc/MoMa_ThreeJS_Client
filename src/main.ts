@@ -4,8 +4,9 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import * as GUI from "./gui.ts";
 import {ImGui, ImGuiImplWeb} from "@mori2003/jsimgui";
-import type {GlobalData} from "./DataInterface.ts";
+import {type GlobalData, SESSION_TYPES} from "./DataInterface.ts";
 import {sendGetRequest, sendPostRequest} from "./tools.ts";
+import {Vector3} from "three";
 
 // Configuration
 const API_URL = "http://localhost:8000";
@@ -14,6 +15,7 @@ const WS_URL = "ws://localhost:8000/ws";
 
 const globalData: GlobalData = {
     SESSION_ID: ["6543"],
+    SESSION_TYPE: [SESSION_TYPES.indexOf("VAE")],
     API_URL: ["http://localhost:8000"],
     WS_URL: ["ws://localhost:8000/ws"],
     ANIMATIONS: [""],
@@ -56,7 +58,7 @@ async function init() {
     let session_id: string = globalData.SESSION_ID[0];
     const sessionInfo = await sendPostRequest(`${globalData.API_URL[0]}/sessions`, JSON.stringify({
         session_id: globalData.SESSION_ID[0],
-        session_type: "VAE",
+        session_type: SESSION_TYPES[globalData.SESSION_TYPE[0]],
         animation_file: "dance1_subject1.bvh"
     }))
 
@@ -83,6 +85,7 @@ async function init() {
 
         ws.onopen = () => {
             console.log("Connecté au serveur d'animation !");
+            document.getElementById("info")!.hidden = true;
         };
 
         let lastMessageTime: number | null = null;
@@ -142,6 +145,7 @@ async function init() {
         } else {
             controls.enabled = true;  // Réactive la caméra
         }
+        controls.update();
 
         renderer.render(scene, camera);
 

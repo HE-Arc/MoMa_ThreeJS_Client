@@ -1,5 +1,6 @@
 export interface GlobalData {
     SESSION_ID: [string];
+    SESSION_TYPE: [number];
     API_URL: [string];
     WS_URL: [string];
     ANIMATIONS: [string];
@@ -10,3 +11,5 @@ export interface GlobalData {
     playbackSpeed: [number];
     vae_values: [[number], [number], [number]];
 }
+
+export const SESSION_TYPES: readonly string[] = ["FK", "VAE"];

@@ -2,7 +2,7 @@
 
 import {ImGui, ImGuiImplWeb} from "@mori2003/jsimgui";
 import {AnimationClient} from "./network.ts";
-import type {GlobalData} from "./DataInterface.ts";
+import {type GlobalData, SESSION_TYPES} from "./DataInterface.ts";
 import {sendDeleteRequest, sendPostRequest} from "./tools.ts";
 
 export class GUI {
@@ -25,6 +25,12 @@ export class GUI {
             ImGui.SameLine();
             ImGui.InputText("##SESSION ID", globalData.SESSION_ID, 256);
 
+            ImGui.Text("SESSION Type");
+            ImGui.SameLine();
+            if (ImGui.Combo("##Type", globalData.SESSION_TYPE, SESSION_TYPES.join("\0") + "\0")) {
+                console.log("Selected Session Type:", SESSION_TYPES[globalData.SESSION_TYPE[0]]);
+            }
+
             ImGui.Text("API URL");
             ImGui.SameLine();
             ImGui.InputText("##API URL", globalData.API_URL, 256);
@@ -46,6 +52,7 @@ export class GUI {
                     console.log("Starting session...");
                     sendPostRequest(`${globalData.API_URL}/sessions`, JSON.stringify({
                         session_id: globalData.SESSION_ID[0],
+                        session_type: SESSION_TYPES[globalData.SESSION_TYPE[0]],
                         animation_file: globalData.ANIMATIONS[globalData.SELECTED_ANIMATION[0]]
                     })).then(_ => {
                         this.onCreateSessionCallback?.();
