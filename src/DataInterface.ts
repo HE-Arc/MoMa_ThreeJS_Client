@@ -11,6 +11,14 @@ export interface GlobalData {
     cameraFollow: [boolean];
     playbackSpeed: [number];
     vae_values: [[number], [number], [number]];
+    infoModal: InfoModal;
+    infoText: [string]
+}
+
+interface InfoModal {
+    isOpen: [boolean];
+    title: [string];
+    message: [string];
 }
 
 export const SESSION_TYPES: readonly string[] = ["FK", "VAE"];

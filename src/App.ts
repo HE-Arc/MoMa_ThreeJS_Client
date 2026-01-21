@@ -50,7 +50,13 @@ export class App {
             connected: [false],
             cameraFollow: [String(import.meta.env.VITE_CAMERA_FOLLOW).toLowerCase() === 'true'],
             playbackSpeed: [1],
-            vae_values: [[0.5], [0.5], [0.5]]
+            vae_values: [[0.5], [0.5], [0.5]],
+            infoModal: {
+                isOpen: [false],
+                title: [""],
+                message: [""],
+            },
+            infoText: [""]
         };
 
         this.sessionId = this.globalData.SESSION_ID[0];
@@ -206,6 +212,8 @@ export class App {
         this.ws.onopen = () => {
             console.log("Connecté au serveur d'animation !");
             this.globalData.connected[0] = true;
+
+            this.globalData.infoModal.message[0] = "Connecté";
         };
 
         let lastMessageTime: number | null = null;
@@ -224,6 +232,7 @@ export class App {
                     if (currentTime - lastPrintTime >= 1000) {
                         const avgElapsed = totalElapsedTime / messageCount;
                         console.log(`Temps moyen entre chaque frame: ${avgElapsed.toFixed(2)}ms | Messages reçus: ${messageCount}`);
+                        this.globalData.infoText[0] = `Temps moyen entre chaque frame: ${avgElapsed.toFixed(2)}ms \nMessages reçus: ${messageCount}`
                         lastPrintTime = currentTime;
                         totalElapsedTime = 0;
                         messageCount = 0;
@@ -243,6 +252,8 @@ export class App {
             console.log("Déconnecté du serveur d'animation.");
             this.ws = null;
             this.globalData.connected[0] = false;
+
+            this.globalData.infoModal.message[0] = "Déconnecté";
         };
 
         this.ws.onerror = (err) => {
@@ -311,7 +322,7 @@ export class App {
         this.renderer.resetState();
 
         // Exemple de modal ImGui (à garder ou retirer selon besoin)
-        this.renderDebugModal();
+        this.renderInfoModal();
 
         ImGuiImplWeb.EndRender();
     }
@@ -319,31 +330,20 @@ export class App {
     /**
      * Modal de debug ImGui (exemple)
      */
-    private renderDebugModal(): void {
-        if (ImGui.Button("Open Modal")) {
-            ImGui.OpenPopup("MyModal");
-        }
-
+    private renderInfoModal(): void {
         const io = ImGui.GetIO();
         ImGui.SetNextWindowPos(
-            new ImVec2(io.DisplaySize.x * 0.5, io.DisplaySize.y * 0.5),
-            ImGui.Cond.FirstUseEver,
+            new ImVec2(io.DisplaySize.x * 0.5, io.DisplaySize.y * 0.95),
+            ImGui.Cond.Always,
             new ImVec2(0.5, 0.5)
         );
+        ImGui.SetNextWindowBgAlpha(0.35);
 
-        if (ImGui.Begin("My GUI")) {
-            ImGui.Text("SESSION ID");
-            ImGui.SameLine();
-            ImGui.InputText("##SESSION ID", this.globalData.SESSION_ID, 256);
+        if (ImGui.Begin("InfoModal", null, ImGui.WindowFlags.AlwaysAutoResize |
+            ImGui.WindowFlags.NoMove | ImGui.WindowFlags.NoCollapse | ImGui.WindowFlags.NoTitleBar)) {
+            ImGui.Text(this.globalData.infoModal.message[0]);
         }
         ImGui.End();
-
-        // ImGui.OpenPopup("MyModal");
-        if (ImGui.BeginPopupModal("MyModal", [true], ImGui.WindowFlags.AlwaysAutoResize)) {
-            ImGui.Text("All other windows are now blocked.");
-            ImGui.Separator();
-            ImGui.EndPopup();
-        }
     }
 
     /**
