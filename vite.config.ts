@@ -1,6 +1,7 @@
 ﻿import { defineConfig } from 'vite'
 
 export default defineConfig({
+  base: '/MoMa_ThreeJS_Client/',
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
