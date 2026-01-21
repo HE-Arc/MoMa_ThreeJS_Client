@@ -1,7 +1,7 @@
 ﻿// noinspection D
 
 import {ImGui, ImGuiImplWeb} from "@mori2003/jsimgui";
-import {type GlobalData, SESSION_TYPES} from "./DataInterface.ts";
+import {type GlobalData, SESSION_FPS, SESSION_TYPES} from "./DataInterface.ts";
 import {sendDeleteRequest, sendPostRequest} from "./tools.ts";
 
 export class GUI {
@@ -77,6 +77,14 @@ export class GUI {
                     console.log("Animation paused");
                     sendPostRequest(`${globalData.API_URL[0]}/sessions/${globalData.SESSION_ID[0]}/pause`, "");
                 }
+            }
+
+            const selectedFpsName = "FPS: " + (globalData.SESSION_FPS[0] >= 0 && globalData.SESSION_FPS[0] < SESSION_FPS.length ? SESSION_FPS[globalData.SESSION_FPS[0]] : "Unknown");
+            if (ImGui.SliderInt("slider FPS", globalData.SESSION_FPS, 0, SESSION_FPS.length-1, selectedFpsName))
+            {
+                sendPostRequest(`${globalData.API_URL[0]}/sessions/${globalData.SESSION_ID[0]}/fps`, JSON.stringify({
+                    fps: SESSION_FPS[globalData.SESSION_FPS[0]]
+                }));
             }
 
             if (ImGui.SliderFloat("Playback Speed", globalData.playbackSpeed, 0.0, 10.0, "%.2f")) {

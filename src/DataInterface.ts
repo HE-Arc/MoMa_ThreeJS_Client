@@ -5,6 +5,7 @@ export interface GlobalData {
     WS_URL: [string];
     ANIMATIONS: [string];
     SELECTED_ANIMATION: [number];
+    SESSION_FPS: [number];
     play: [boolean];
     connected: [boolean];
     cameraFollow: [boolean];
@@ -13,3 +14,4 @@ export interface GlobalData {
 }
 
 export const SESSION_TYPES: readonly string[] = ["FK", "VAE"];
+export const SESSION_FPS: readonly number[] = [5, 10, 24, 30, 45, 60, 120, 240];
