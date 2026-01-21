@@ -42,6 +42,15 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_SESSION_ID : ${{ vars.VITE_SESSION_ID }}
+          VITE_SESSION_TYPE : ${{ vars.VITE_SESSION_TYPE }}
+
+          VITE_AUTO_CONNECT : ${{ vars.VITE_AUTO_CONNECT }}
+          VITE_CAMERA_FOLLOW : ${{ vars.VITE_CAMERA_FOLLOW }}
+        
+          VITE_SERVER_IP : ${{ vars.VITE_SERVER_IP }}
+          VITE_SERVER_PORT : ${{ vars.VITE_SERVER_PORT }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
